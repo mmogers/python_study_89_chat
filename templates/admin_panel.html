@@ -1,0 +1,32 @@
+<!-- admin_panel.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="static/css/admin_panel_style.css">
+</head>
+<body>
+    <h1>Welcome to the Admin Panel!</h1>
+
+    <h2>Delete Messages:</h2>
+    <ul id="messageList">
+        {% for msg in messages %}
+            <li class="message">
+               <!-- <img src="{{ url_for('static', filename=msg['profile_pic']) }}" alt="Profile Pic" height="30" width="30">-->
+                {{ msg['username'] }} ({{ msg['timestamp'] | timestamp_to_str }}): {{ msg['message'] }}
+                <form class="deleteForm" action="/delete_message" method="post">
+                    <input type="hidden" name="admin" value="true">
+                    <input type="hidden" name="timestamp" value="{{ msg['timestamp'] }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <br>
+
+    <button onclick="location.href='/chat?username=admin'">Back to Chat</button>
+</body>
+</html>

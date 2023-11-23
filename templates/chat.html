@@ -1,0 +1,44 @@
+<!-- chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="/static/css/chat_style.css">
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+
+    {% if is_admin %}
+        <form action="/admin_panel" method="get">
+            <button type="submit" name="adminPanelBtn" value="true">Admin Panel</button>
+        </form>
+    {% endif %}
+
+    <h2>Last 5 Messages:</h2>
+    <ul id="messageList">
+        {% for msg in messages %}
+            <li class="message">
+                <!--<img src="{{ url_for('static', filename=msg['profile_pic']) }}" alt="Profile Pic" height="30" width="30">-->
+                {{ msg['username'] }} ({{ msg['timestamp'] | timestamp_to_str }}): {{ msg['message'] }}
+                
+                {% if is_admin and admin_panel_pressed %}
+                    <form class="deleteForm" action="/delete_message" method="post">
+                        <input type="hidden" name="admin" value="true">
+                        <input type="hidden" name="timestamp" value="{{ msg['timestamp'] }}">
+                        <input type="submit" value="Delete">
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <form action="/add_message" method="post">
+        <input type="hidden" name="username" value="{{ username }}">
+        <label for="message">New Message:</label>
+        <input type="text" id="message" name="message" required>
+        <input type="submit" value="Send">
+    </form>
+</body>
+</html>
